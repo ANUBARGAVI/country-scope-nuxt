@@ -1,15 +1,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { getWeather } from '@/composables/useWeather'
 
 const props = defineProps(['country'])
+
 const weather = ref(null)
-const travelInfo = ref(null)
 
 onMounted(async () => {
-  if (props.country.latlng) {
+  if (props.country?.latlng?.length === 2) {
     weather.value = await getWeather(props.country.latlng[0], props.country.latlng[1])
   }
-  travelInfo.value = travelData[props.country.name.common]
 })
 </script>
 
@@ -28,9 +28,10 @@ onMounted(async () => {
       <p class="text-sm text-gray-600"><strong>Region:</strong> {{ country.region }}</p>
       <p class="text-sm text-gray-600"><strong>Capital:</strong> {{ country.capital?.[0] }}</p>
 
-   
-
-
+      <!-- Weather Preview -->
+      <div v-if="weather" class="mt-2 text-sm text-gray-600">
+        <p><strong>Weather:</strong> {{ weather.temp }}°C, {{ weather.desc }}</p>
+      </div>
     </div>
   </NuxtLink>
 </template>
